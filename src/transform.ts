@@ -1,12 +1,6 @@
-import fg from 'fast-glob'
-import { dirname } from "path";
 import MagicString from "magic-string";
-import { parse } from 'acorn'
-import type { Literal, ArrayExpression, ObjectExpression } from 'estree'
-import type { TransformPluginContext } from 'rollup'
 import { ViteAliasOptions, Alias } from '../types';
 import { isString, isRegExp } from '../shared';
-
 
 const importGlobRE = /\b@?(?:import|export)(?:.*)(['|"].*['|"])/g
 
@@ -16,18 +10,32 @@ function matchImport(code: string, id: string) {
   return []
 }
 
-function resolveReplacement(s: MagicString, entry: Alias, start: number, end: number) {
+function resolveReplacement(
+  s: MagicString,
+  entry: Alias,
+  start: number,
+  end: number): void {
   s.overwrite(start, end, entry.replacement)
 }
 
-function setRange(s: MagicString, entry: Alias, match: RegExpMatchArray, originalString: string, checkStart: string | number, checkEnd: string) {
+function setRange(
+  s: MagicString,
+  entry: Alias,
+  match: RegExpMatchArray,
+  originalString: string,
+  checkStart: string | number,
+  checkEnd: string | number
+): void {
   const start = match.index! + originalString.indexOf(checkStart as string)
-  const end = start + checkEnd.length
+  const end = start + (checkEnd as string).length
   resolveReplacement(s, entry, start, end)
 }
 
-
-function replacement(s: MagicString, match: RegExpMatchArray, { entries }: ViteAliasOptions) {
+function replacement(
+  s: MagicString,
+  match: RegExpMatchArray,
+  { entries }: ViteAliasOptions
+): void {
   const originalString = match[0]
   const argumentString = match[1]
 
@@ -57,6 +65,7 @@ export async function transform(
   for (const match of maths) {
     replacement(s, match, options)
   }
+
   return {
     code: s.toString(),
     map: s.generateMap()
