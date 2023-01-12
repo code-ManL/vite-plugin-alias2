@@ -1,16 +1,16 @@
-# vite alias 加强版
+# vite alias Enhanced version
 
-在开发过程中，有一小部分特殊情况，vite 原生的 alis 的路径替换不足以满足开发需求，
-因此这是再次基础上的加强版，并且该插件兼容 vite 原生的 alias
 
-### 下载地址
+During the development process, there are a small number of special cases where the path substitution of Vite's native alis is not enough to meet the development needs.So this is again an enhanced version of the foundation, and the plugin is compatible with Vite's native alias
+
+### Download address
 
 npm i vite-plugin-alias
 
 ### 插件用法
 
-该插件支持 vue ts tsx js css scss less json ... 文件
-该插件接受两种参数格式
+The plugin supports vue ts tsx js css scss less json ... files
+The plugin accepts two parameter formats
 
 ```ts
 export interface Alias {
@@ -28,17 +28,17 @@ vite.config.ts
 ```ts
 
 import Alias from 'vite-plugin-alias'
-// 数组形式
+// Array form
 plugins: [Alias({
     entries: [
-      { find: '~', replacement: 'src' },  // 替换 ~
-      { find: '~/style.css', replacement: './style.css' }, // 替换 ~/style.css
-      { find: "^@vue/(.*?)$", replacement: 'src/$1/src' }, // 字符串正则匹配
-      { find: /^(.*)\.js$/, replacement: '$1.wasm' }, // 正则匹配
+      { find: '~', replacement: 'src' },  
+      { find: '~/style.css', replacement: './style.css' }, 
+      { find: "^@vue/(.*?)$", replacement: 'src/$1/src' }, 
+      { find: /^(.*)\.js$/, replacement: '$1.wasm' }, 
     ],
   })],
 
-// 支持对象简写方式
+// Object shorthand is supported
 plugins: [Alias({
     entries: {
       '~': '.',
@@ -50,7 +50,7 @@ plugins: [Alias({
 
 ```
 
-### 案例如下
+### The case is as follows
 
 ```vue
 <template>
@@ -70,7 +70,7 @@ import { a } from "./index";
 </style>
 ```
 
-编译之后 被条件注释包裹的代码将会在生产环境删除
+After compilation, the code wrapped in conditional comments will replace the path
 
 ```vue
 <template>
