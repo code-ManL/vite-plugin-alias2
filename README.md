@@ -7,7 +7,7 @@ During the development process, there are a small number of special cases where 
 
 npm i vite-plugin-alias
 
-### 插件用法
+### Plugin usage
 
 The plugin supports vue ts tsx js css scss less json ... files
 The plugin accepts two parameter formats
