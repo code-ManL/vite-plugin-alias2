@@ -1,6 +1,5 @@
 import MagicString from "magic-string";
 import { ViteAliasOptions, Alias } from '../types';
-import { isString, isRegExp } from '../shared';
 
 const importGlobRE = /\b@?(?:import|export)(?:.*)['|"](.*)['|"]/g
 
@@ -37,7 +36,6 @@ function setRange(
     resolveReplacement(s, entry, start, end)
   }
   else {
-    // console.log(entryMatch,checkStart);
     if (argumentString.indexOf(entryMatch[0]) === 0){
       end = start + entryMatch[0].length
       resolveReplacement(s, entry, start, end)
