@@ -1,7 +1,6 @@
 import type { Plugin } from "vite";
 import type { ViteAliasOptions } from "../types";
 import { transform } from './transform'
-import { isArray } from "../shared";
 
 
 function getEntries(options: ViteAliasOptions): ViteAliasOptions {
@@ -10,16 +9,17 @@ function getEntries(options: ViteAliasOptions): ViteAliasOptions {
   if (!entries)
     return {}
 
-  if (!isArray(entries)) {
-    let option: ViteAliasOptions = {}
-
-    entries = Object.entries(entries).map(([key, value]) => {
-      return { find: key, replacement: value };
+  if (Array.isArray(entries)) {
+    options.entries = entries.map(entry => {
+      return {
+        find: new RegExp(entry.find),
+        replacement: entry.replacement
+      }
+    })
+  } else if (!Array.isArray(entries)) {
+    options.entries = Object.entries(entries).map(([key, value]) => {
+      return { find: new RegExp(key), replacement: value };
     });
-
-    option.entries = entries
-
-    return option
   }
 
   return options
@@ -32,7 +32,8 @@ export default function (options: ViteAliasOptions = {}): Plugin {
   return {
     name: 'vite-plugin-alias',
     transform(code, id) {
-      return transform(code, id, options)
+      if (options.entries)
+        return transform(code, id, options)
     }
   }
 }

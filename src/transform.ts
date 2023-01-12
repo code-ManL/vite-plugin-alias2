@@ -2,7 +2,7 @@ import MagicString from "magic-string";
 import { ViteAliasOptions, Alias } from '../types';
 import { isString, isRegExp } from '../shared';
 
-const importGlobRE = /\b@?(?:import|export)(?:.*)(['|"].*['|"])/g
+const importGlobRE = /\b@?(?:import|export)(?:.*)['|"](.*)['|"]/g
 
 function matchImport(code: string, id: string) {
   if (!id.includes('node_modules'))
@@ -14,7 +14,9 @@ function resolveReplacement(
   s: MagicString,
   entry: Alias,
   start: number,
-  end: number): void {
+  end: number,
+): void {
+
   s.overwrite(start, end, entry.replacement)
 }
 
@@ -23,12 +25,24 @@ function setRange(
   entry: Alias,
   match: RegExpMatchArray,
   originalString: string,
-  checkStart: string | number,
-  checkEnd: string | number
+  argumentString: string,
+  entryMatch: RegExpMatchArray
 ): void {
-  const start = match.index! + originalString.indexOf(checkStart as string)
-  const end = start + (checkEnd as string).length
-  resolveReplacement(s, entry, start, end)
+
+  const start: number = match.index! + originalString.indexOf(argumentString as string)
+  let end: number
+  if (entry.replacement.includes('$1')) {
+    entry.replacement = entry.replacement.replace(/\$1/, entryMatch[1])
+    end = start + argumentString.length
+    resolveReplacement(s, entry, start, end)
+  }
+  else {
+    // console.log(entryMatch,checkStart);
+    if (argumentString.indexOf(entryMatch[0]) === 0){
+      end = start + entryMatch[0].length
+      resolveReplacement(s, entry, start, end)
+    }
+  }
 }
 
 function replacement(
@@ -36,15 +50,14 @@ function replacement(
   match: RegExpMatchArray,
   { entries }: ViteAliasOptions
 ): void {
+
   const originalString = match[0]
   const argumentString = match[1]
 
   for (const entry of entries as Alias[]) {
-    if (isRegExp(entry.find) && argumentString.match(entry.find)) {
-      setRange(s, entry, match, originalString, argumentString.slice(1, -1), argumentString.slice(1, -1))
-    }
-    else if (isString(entry.find) && originalString.includes(entry.find)) {
-      setRange(s, entry, match, originalString, entry.find, entry.find)
+    const entryMatch = argumentString.match(entry.find)
+    if (entryMatch) {
+      setRange(s, entry, match, originalString, argumentString, entryMatch)
     }
   }
 }
@@ -54,15 +67,18 @@ export async function transform(
   id: string,
   options: ViteAliasOptions
 ) {
-  const maths = matchImport(code, id)
+  if (!options.entries)
+    return
 
-  if (!maths.length) {
+  const matchs = matchImport(code, id)
+
+  if (!matchs.length) {
     return
   }
 
   const s = new MagicString(code)
 
-  for (const match of maths) {
+  for (const match of matchs) {
     replacement(s, match, options)
   }
 
