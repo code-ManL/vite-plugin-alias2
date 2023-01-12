@@ -67,7 +67,7 @@ export async function transform(
 ) {
   if (!options.entries)
     return
-
+  
   const matchs = matchImport(code, id)
 
   if (!matchs.length) {

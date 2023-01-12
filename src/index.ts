@@ -3,7 +3,7 @@ import type { ViteAliasOptions } from "../types";
 import { transform } from './transform'
 
 
-function getEntries(options: ViteAliasOptions): ViteAliasOptions {
+export function getEntries(options: ViteAliasOptions): ViteAliasOptions {
   let { entries } = options
 
   if (!entries)
@@ -18,22 +18,20 @@ function getEntries(options: ViteAliasOptions): ViteAliasOptions {
     })
   } else if (!Array.isArray(entries)) {
     options.entries = Object.entries(entries).map(([key, value]) => {
-      return { find: new RegExp(key), replacement: value };
+      return { find: key, replacement: value };
     });
   }
 
   return options
 }
 
-
-export default function (options: ViteAliasOptions = {}): Plugin {
+export default function Alias(options: ViteAliasOptions = {}): Plugin {
   options = getEntries(options);
-  
+
   return {
     name: 'vite-plugin-alias',
     transform(code, id) {
-      if (options.entries)
-        return transform(code, id, options)
+      return transform(code, id, options)
     }
   }
 }
