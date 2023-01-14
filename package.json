@@ -1,5 +1,5 @@
 {
-  "name": "@vite/plugin-alias",
+  "name": "vite-plugin-alias2",
   "version": "1.0.0",
   "author": "Mr.Liu",
   "files": [
@@ -30,8 +30,8 @@
   "keywords": [
     "vite",
     "alias",
-    "vite-plugin-alias",
-    "vite-alias",
+    "vite-plugin-alias2",
+    "vite-plugin",
     "plugin-alias"
   ],
   "license": "ISC",
@@ -46,6 +46,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.4.1",
     "typescript": "^4.9.4",
-    "vite": "^4.0.4"
+    "vite": "^4.0.4",
+    "vite-plugin-isdev": "^0.0.5"
   }
 }

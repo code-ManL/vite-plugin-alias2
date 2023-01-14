@@ -5,7 +5,7 @@ During the development process, there are a small number of special cases where 
 
 ### Download address
 
-npm i vite-plugin-alias
+npm i vite-plugin-alias2
 
 ### Plugin usage
 
