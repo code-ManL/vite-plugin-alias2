@@ -5,4 +5,4 @@ test/
 tsconifg.json
 dist/
 production/
-rollup.config.js/
+rollup.config.js
