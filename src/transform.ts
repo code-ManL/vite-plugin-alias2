@@ -15,7 +15,6 @@ function resolveReplacement(
   start: number,
   end: number,
 ): void {
-
   s.overwrite(start, end, entry.replacement)
 }
 
@@ -27,7 +26,6 @@ function setRange(
   argumentString: string,
   entryMatch: RegExpMatchArray
 ): void {
-
   const start: number = match.index! + originalString.indexOf(argumentString as string)
   let end: number
   if (entry.replacement.includes('$1')) {
@@ -36,7 +34,7 @@ function setRange(
     resolveReplacement(s, entry, start, end)
   }
   else {
-    if (argumentString.indexOf(entryMatch[0]) === 0){
+    if (argumentString.indexOf(entryMatch[0]) === 0) {
       end = start + entryMatch[0].length
       resolveReplacement(s, entry, start, end)
     }
@@ -48,10 +46,9 @@ function replacement(
   match: RegExpMatchArray,
   { entries }: ViteAliasOptions
 ): void {
-
   const originalString = match[0]
   const argumentString = match[1]
-
+  
   for (const entry of entries as Alias[]) {
     const entryMatch = argumentString.match(entry.find)
     if (entryMatch) {
@@ -67,7 +64,7 @@ export async function transform(
 ) {
   if (!options.entries)
     return
-  
+
   const matchs = matchImport(code, id)
 
   if (!matchs.length) {
